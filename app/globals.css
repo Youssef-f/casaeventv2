@@ -209,3 +209,55 @@
     max-width: 250px !important;
   }
 }
+
+/* Styles for Leaflet map */
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+}
+
+.leaflet-control-zoom a {
+  background-color: white !important;
+  border: 1px solid #e5e7eb !important;
+  color: #374151 !important;
+  font-weight: bold !important;
+  transition: all 0.2s ease !important;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 30px !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: #f9fafb !important;
+  border-color: #FF5A1F !important;
+  color: #FF5A1F !important;
+  transform: scale(1.05) !important;
+}
+
+.leaflet-control-zoom a:first-child {
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+}
+
+.leaflet-control-zoom a:last-child {
+  border-bottom-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+}
+
+/* Custom price marker animation */
+.custom-price-marker {
+  animation: marker-bounce 1s ease-in-out infinite;
+}
+
+@keyframes marker-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
