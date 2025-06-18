@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import logo from "@/public/images/casaeventlogo.png";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Star, ShoppingCart, Minus, Plus } from "lucide-react";
@@ -224,15 +223,9 @@ export default function EventDetail() {
           <div className="lg:w-2/3">
             <div className="bg-white rounded-xl shadow-lg p-8">
               {/* Event Title */}
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">{event.name}</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">Choisissez vos tickets</h2>
 
-              {/* Description */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Description</h3>
-                <p className="text-gray-700 leading-relaxed text-sm">
-                  {event.description}
-                </p>
-              </div>
+            
 
               {/* Ticket Cards */}
               <div className="space-y-4 mb-8">
