@@ -69,7 +69,8 @@ export default function Header() {
       <div className="flex items-center gap-4 flex-shrink-0">
         {user ? (
           <div className="flex items-center gap-3">
-            {!(pathname && pathname.startsWith("/seller")) && (
+            {/* Show 'Devenir Partenaire' only if not logged in */}
+            {!user && !(pathname && pathname.startsWith("/seller")) && (
               <Link href="/partner-signup">
                 <button className="bg-[#FF5A1F] text-white px-3 py-1.5 text-sm rounded-lg hover:bg-[#e04e1a] transition">
                   Devenir Partenaire
@@ -112,7 +113,7 @@ export default function Header() {
             </div>
           </div>
         ) : (
-          <Link href="/sign-in">
+          <Link href="/user-type">
             <button className="bg-[#FF5A1F] text-white px-4 py-2 rounded-full font-bold hover:bg-[#e04e1a] transition">
               Connexion
             </button>

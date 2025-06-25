@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { MapPin, Star, Ticket } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 // Fix for default markers
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -46,7 +44,23 @@ export default function InteractiveMap({
 }: InteractiveMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
-  const router = useRouter();
+  const [userPosition, setUserPosition] = useState<[number, number] | null>(
+    null
+  );
+
+  // Get user geolocation
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position: GeolocationPosition) => {
+          setUserPosition([
+            position.coords.latitude,
+            position.coords.longitude,
+          ] as [number, number]);
+        }
+      );
+    }
+  }, []);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -168,6 +182,19 @@ export default function InteractiveMap({
       });
     });
 
+    // Add user position marker if available
+    if (userPosition && userPosition.length === 2) {
+      const userIcon = L.divIcon({
+        html: `<div class="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center border-2 border-white shadow"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="6"/></svg></div>`,
+        className: "custom-user-marker",
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+      });
+      L.marker(userPosition as [number, number], { icon: userIcon })
+        .addTo(map)
+        .bindPopup("Vous êtes ici");
+    }
+
     // Add some default markers if no events provided
     if (events.length === 0) {
       const defaultLocations = [
@@ -192,7 +219,7 @@ export default function InteractiveMap({
         mapInstanceRef.current = null;
       }
     };
-  }, [events, center, zoom]);
+  }, [events, center, zoom, userPosition]);
 
   return (
     <div

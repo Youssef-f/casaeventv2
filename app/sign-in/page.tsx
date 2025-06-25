@@ -32,6 +32,8 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
+const ADMIN_EMAIL = "admin@casaevent.com";
+
 const Page = () => {
   const router = useRouter();
   const [error, setError] = useState("");
@@ -53,7 +55,11 @@ const Page = () => {
         data.password
       );
       console.log("Connexion réussie :", userCredential.user);
-      router.push("/dashboard");
+      if (userCredential.user.email === ADMIN_EMAIL) {
+        router.push("/admin-dashboard");
+      } else {
+        router.push("/");
+      }
     } catch (err: any) {
       if (err.code === "auth/user-not-found") {
         setError("Aucun compte trouvé pour cet email.");
@@ -72,8 +78,6 @@ const Page = () => {
         {/* Partie gauche : formulaire */}
         <div className="w-1/2 flex flex-col items-center justify-center gap-4 px-8">
           <div className="max-w-md flex flex-col items-center gap-4">
-          
-          
             <h2 className="font-bold text-2xl mt-2">Cas@Event | Connexion</h2>
 
             <Form {...form}>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -18,6 +18,7 @@ import {
   Ticket,
 } from "lucide-react";
 import dynamic from "next/dynamic";
+import Chatbot from "@/components/Chatbot/Chatbot";
 
 // Import dynamique pour éviter les erreurs SSR avec Leaflet
 const InteractiveMap = dynamic(() => import("@/components/InteractiveMap"), {
@@ -186,7 +187,7 @@ export default function Home() {
       rating: 4.0,
       reviewsCount: 7,
       image: "/images/gims.jpg",
-      position: [33.5731, -7.5898],
+      position: [33.5731, -7.5898] as [number, number],
       category: "Concert",
     },
     {
@@ -202,7 +203,7 @@ export default function Home() {
       rating: 5.0,
       reviewsCount: 14,
       image: "/images/rema.jpg",
-      position: [33.5584, -7.6707],
+      position: [33.5584, -7.6707] as [number, number],
       category: "Concert",
     },
     {
@@ -218,10 +219,12 @@ export default function Home() {
       rating: 4.0,
       reviewsCount: 267,
       image: "/images/myriam.jpg",
-      position: [33.5892, -7.6036],
+      position: [33.5892, -7.6036] as [number, number],
       category: "Festival",
     },
   ];
+
+  const [filteredEvents, setFilteredEvents] = useState(events);
 
   const toggleFavorite = (eventId: number) => {
     const newFavorites = new Set(favorites);
@@ -251,14 +254,49 @@ export default function Home() {
   };
 
   const handleSearch = () => {
-    console.log("Recherche avec filtres:", filters);
-    // Implement search logic here
+    let result = events;
+    if (filters.typeActivite) {
+      result = result.filter((e) =>
+        e.category.toLowerCase().includes(filters.typeActivite.toLowerCase())
+      );
+    }
+    if (filters.typeEvenement) {
+      result = result.filter((e) =>
+        e.title.toLowerCase().includes(filters.typeEvenement.toLowerCase())
+      );
+    }
+    if (filters.prix) {
+      if (filters.prix === "0-100")
+        result = result.filter(
+          (e) => parseInt(e.price) >= 0 && parseInt(e.price) <= 100
+        );
+      if (filters.prix === "100-500")
+        result = result.filter(
+          (e) => parseInt(e.price) > 100 && parseInt(e.price) <= 500
+        );
+      if (filters.prix === "500-1000")
+        result = result.filter(
+          (e) => parseInt(e.price) > 500 && parseInt(e.price) <= 1000
+        );
+      if (filters.prix === "1000+")
+        result = result.filter((e) => parseInt(e.price) > 1000);
+    }
+    if (filters.date) {
+      result = result.filter((e) => e.date.includes(filters.date));
+    }
+    if (filters.heure) {
+      result = result.filter(
+        (e) =>
+          e.time && e.time.toLowerCase().includes(filters.heure.toLowerCase())
+      );
+    }
+    if (filters.lieu) {
+      result = result.filter((e) =>
+        e.location.toLowerCase().includes(filters.lieu.toLowerCase())
+      );
+    }
+    setFilteredEvents(result);
   };
-
-  const filteredEvents =
-    selectedCategory === "Tous"
-      ? events
-      : events.filter((event) => event.category === selectedCategory);
 
   // Render star rating
   const renderStars = (rating: number) => {
@@ -458,6 +496,81 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Add this section above the main event grid (after filters, before 'Nouveautés & Tendances du Mois') */}
+      {favorites.size > 0 && (
+        <section className="max-w-7xl mx-auto px-4 py-8">
+          <h2 className="text-2xl font-bold mb-6 text-left text-[#FF5A1F] flex items-center gap-2">
+            <Heart size={24} className="fill-red-500 text-red-500" />
+            Mes Favoris
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {events
+              .filter((event) => favorites.has(event.id))
+              .map((event) => (
+                <div
+                  key={event.id}
+                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                >
+                  <div className="relative h-48 group">
+                    <Image
+                      src={event.image}
+                      alt={event.title}
+                      fill
+                      className="object-cover"
+                    />
+                    <button
+                      onClick={() => toggleFavorite(event.id)}
+                      className="absolute top-2 right-2 p-1 rounded-full bg-white/80 hover:bg-white transition-colors"
+                    >
+                      <Heart
+                        size={16}
+                        className={
+                          favorites.has(event.id)
+                            ? "fill-red-500 text-red-500"
+                            : "text-gray-600"
+                        }
+                      />
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-sm mb-2 line-clamp-2">
+                      {event.title}
+                    </h3>
+                    <div className="text-xs text-gray-600 mb-3 space-y-1">
+                      <p>{event.location}</p>
+                      <p>{event.date}</p>
+                      {event.time && <p>{event.time}</p>}
+                    </div>
+                    <div className="flex justify-center mb-3">
+                      <span className="bg-[#FF5A1F] text-white px-3 py-1 rounded-full text-sm font-bold">
+                        {event.price}
+                      </span>
+                    </div>
+                    <Link
+                      href={`/event/${event.id}`}
+                      className="w-full block bg-[#FF5A1F] text-white py-2 rounded text-sm font-bold hover:bg-red-600 transition-colors text-center"
+                    >
+                      Acheter maintenant
+                    </Link>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </section>
+      )}
+      {favorites.size === 0 && (
+        <section className="max-w-7xl mx-auto px-4 py-8">
+          <h2 className="text-2xl font-bold mb-6 text-left text-[#FF5A1F] flex items-center gap-2">
+            <Heart size={24} className="text-gray-300" />
+            Mes Favoris
+          </h2>
+          <div className="text-gray-500 text-center">
+            Aucun favori pour le moment. Cliquez sur le cœur d'une activité pour
+            l'ajouter ici !
+          </div>
+        </section>
+      )}
+
       {/* Nouveautés & Tendances du Mois */}
       <section className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
@@ -530,7 +643,7 @@ export default function Home() {
 
         {/* Event Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {events
+          {filteredEvents
             .filter(
               (e) =>
                 selectedCategory === "Tous" || e.category === selectedCategory
@@ -760,6 +873,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <div className="fixed bottom-6 right-6 z-50">
+        <Chatbot />
+      </div>
     </main>
   );
 }
