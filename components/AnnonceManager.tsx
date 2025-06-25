@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Trash2, Pencil } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type Annonce = {
   id: number;
@@ -13,15 +14,21 @@ type Annonce = {
 
 const initialAnnonces: Annonce[] = [
   { id: 1, type: "Activité", titre: "Cours de yoga", date: "15/05/2024" },
-  { id: 2, type: "Événement", titre: "Concert en plein air", date: "20/05/2024" },
+  {
+    id: 2,
+    type: "Événement",
+    titre: "Concert en plein air",
+    date: "20/05/2024",
+  },
   { id: 3, type: "Restaurant", titre: "La Table Marocaine" }, // sans date
 ];
 
 export default function AnnonceManager() {
   const [annonces, setAnnonces] = useState(initialAnnonces);
+  const router = useRouter();
 
   const handleDelete = (id: number) => {
-    setAnnonces(annonces.filter(a => a.id !== id));
+    setAnnonces(annonces.filter((a) => a.id !== id));
   };
 
   const handleEdit = (id: number) => {
@@ -29,19 +36,23 @@ export default function AnnonceManager() {
   };
 
   const handleCreate = () => {
-    alert("Redirection vers formulaire de création");
+    router.push("/seller/new-event");
   };
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Gestion des annonces</h1>
-        <Button onClick={handleCreate} className="bg-orange-600 text-white hover:bg-orange-700">
+        <Button
+          onClick={handleCreate}
+          className="bg-orange-600 text-white hover:bg-orange-700"
+        >
           + Créer
         </Button>
       </div>
       <p className="text-gray-600 mb-4">
-        Création, modification et suppression d'activités, d'événements et de restaurants.
+        Création, modification et suppression d'activités, d'événements et de
+        restaurants.
       </p>
 
       <div className="overflow-x-auto">
@@ -55,7 +66,7 @@ export default function AnnonceManager() {
             </tr>
           </thead>
           <tbody>
-            {annonces.map(annonce => (
+            {annonces.map((annonce) => (
               <tr key={annonce.id} className="border-t">
                 <td className="px-4 py-2">{annonce.type}</td>
                 <td className="px-4 py-2">{annonce.titre}</td>

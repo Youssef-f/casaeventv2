@@ -3,23 +3,38 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Heart, ChevronDown, Calendar, Clock, MapPin, DollarSign, Filter, Search, Star, Ticket } from "lucide-react";
-import dynamic from 'next/dynamic';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Heart,
+  ChevronDown,
+  Calendar,
+  Clock,
+  MapPin,
+  DollarSign,
+  Filter,
+  Search,
+  Star,
+  Ticket,
+} from "lucide-react";
+import dynamic from "next/dynamic";
 
 // Import dynamique pour éviter les erreurs SSR avec Leaflet
-const InteractiveMap = dynamic(() => import('@/components/InteractiveMap'), {
+const InteractiveMap = dynamic(() => import("@/components/InteractiveMap"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-96 bg-gray-200 rounded-xl flex items-center justify-center">
       <div className="text-gray-500">Chargement de la carte...</div>
     </div>
-  )
+  ),
 });
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("Tous");
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
-  const [nearbyFavorites, setNearbyFavorites] = useState<Set<number>>(new Set());
+  const [nearbyFavorites, setNearbyFavorites] = useState<Set<number>>(
+    new Set()
+  );
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -28,7 +43,7 @@ export default function Home() {
     prix: "",
     date: "",
     heure: "",
-    lieu: ""
+    lieu: "",
   });
 
   const categories = ["Tous", "Activités", "Événements", "Restaurants"];
@@ -39,27 +54,27 @@ export default function Home() {
       { value: "sport", label: "Sport & Fitness" },
       { value: "culture", label: "Culture & Arts" },
       { value: "loisirs", label: "Loisirs & Détente" },
-      { value: "restaurants", label: "Restaurants" }
+      { value: "restaurants", label: "Restaurants" },
     ],
     typeEvenement: [
       { value: "", label: "Tous les événements" },
       { value: "concert", label: "Concerts" },
       { value: "festival", label: "Festivals" },
       { value: "spectacle", label: "Spectacles" },
-      { value: "conference", label: "Conférences" }
+      { value: "conference", label: "Conférences" },
     ],
     prix: [
       { value: "", label: "Tous les prix" },
       { value: "0-100", label: "0 - 100 MAD" },
       { value: "100-500", label: "100 - 500 MAD" },
       { value: "500-1000", label: "500 - 1000 MAD" },
-      { value: "1000+", label: "1000+ MAD" }
+      { value: "1000+", label: "1000+ MAD" },
     ],
     heure: [
       { value: "", label: "Toute la journée" },
       { value: "matin", label: "Matin (6h-12h)" },
       { value: "apres-midi", label: "Après-midi (12h-18h)" },
-      { value: "soir", label: "Soir (18h-24h)" }
+      { value: "soir", label: "Soir (18h-24h)" },
     ],
     lieu: [
       { value: "", label: "Tous les lieux" },
@@ -70,7 +85,7 @@ export default function Home() {
       { value: "gironde", label: "Gironde" },
       { value: "abdelmoumen", label: "Abdelmoumen" },
       { value: "anfa", label: "Anfa" },
-    ]
+    ],
   };
 
   const events = [
@@ -82,7 +97,7 @@ export default function Home() {
       time: "21 Juin 2025 à 14:00",
       price: "600 MAD",
       image: "/images/gims.jpg",
-      category: "Événements"
+      category: "Événements",
     },
     {
       id: 2,
@@ -92,7 +107,7 @@ export default function Home() {
       time: "Du 12 Juin Au 14 Juin",
       price: "950 MAD",
       image: "/images/casanola.jpg",
-      category: "Événements"
+      category: "Événements",
     },
     {
       id: 3,
@@ -102,7 +117,7 @@ export default function Home() {
       time: "Ouverture des portes à 16:00",
       price: "1200 MAD",
       image: "/images/rema.jpg",
-      category: "Événements"
+      category: "Événements",
     },
     {
       id: 4,
@@ -112,7 +127,7 @@ export default function Home() {
       time: "31 Décembre à 18:00",
       price: "100 MAD",
       image: "/images/dream-world.jpg",
-      category: "Activités"
+      category: "Activités",
     },
     {
       id: 5,
@@ -122,7 +137,7 @@ export default function Home() {
       time: "Ouverture des portes à 16:00",
       price: "400 MAD",
       image: "/images/rema.jpg",
-      category: "Événements"
+      category: "Événements",
     },
     {
       id: 6,
@@ -132,7 +147,7 @@ export default function Home() {
       time: "",
       price: "850 MAD",
       image: "/images/myriam.jpg",
-      category: "Événements"
+      category: "Événements",
     },
     {
       id: 7,
@@ -142,7 +157,7 @@ export default function Home() {
       time: "",
       price: "100 MAD",
       image: "/images/dream-world-2.jpg",
-      category: "Activités"
+      category: "Activités",
     },
     {
       id: 8,
@@ -152,8 +167,8 @@ export default function Home() {
       time: "21 Juin 2025 à 14:00",
       price: "600 MAD",
       image: "/images/gims.jpg",
-      category: "Événements"
-    }
+      category: "Événements",
+    },
   ];
 
   // Nearby events with detailed information
@@ -172,7 +187,7 @@ export default function Home() {
       reviewsCount: 7,
       image: "/images/gims.jpg",
       position: [33.5731, -7.5898],
-      category: "Concert"
+      category: "Concert",
     },
     {
       id: 102,
@@ -188,7 +203,7 @@ export default function Home() {
       reviewsCount: 14,
       image: "/images/rema.jpg",
       position: [33.5584, -7.6707],
-      category: "Concert"
+      category: "Concert",
     },
     {
       id: 103,
@@ -204,8 +219,8 @@ export default function Home() {
       reviewsCount: 267,
       image: "/images/myriam.jpg",
       position: [33.5892, -7.6036],
-      category: "Festival"
-    }
+      category: "Festival",
+    },
   ];
 
   const toggleFavorite = (eventId: number) => {
@@ -229,9 +244,9 @@ export default function Home() {
   };
 
   const handleFilterChange = (filterType: string, value: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      [filterType]: value
+      [filterType]: value,
     }));
   };
 
@@ -240,9 +255,10 @@ export default function Home() {
     // Implement search logic here
   };
 
-  const filteredEvents = selectedCategory === "Tous" 
-    ? events 
-    : events.filter(event => event.category === selectedCategory);
+  const filteredEvents =
+    selectedCategory === "Tous"
+      ? events
+      : events.filter((event) => event.category === selectedCategory);
 
   // Render star rating
   const renderStars = (rating: number) => {
@@ -284,8 +300,10 @@ export default function Home() {
       </section>
 
       {/* Enhanced Filter/Search Bar */}
-      <section aria-label="Filtre des activités et événements" 
-               className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-6xl mx-auto mt-8">
+      <section
+        aria-label="Filtre des activités et événements"
+        className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-6xl mx-auto mt-8"
+      >
         {/* ... existing filter code ... */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 items-end">
           {/* Type d'activité */}
@@ -297,7 +315,9 @@ export default function Home() {
             <div className="relative">
               <select
                 value={filters.typeActivite}
-                onChange={(e) => handleFilterChange('typeActivite', e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange("typeActivite", e.target.value)
+                }
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A1F] focus:border-transparent appearance-none cursor-pointer hover:border-gray-300 transition-colors"
               >
                 {filterOptions.typeActivite.map((option) => (
@@ -306,7 +326,10 @@ export default function Home() {
                   </option>
                 ))}
               </select>
-              <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+              <ChevronDown
+                size={16}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+              />
             </div>
           </div>
 
@@ -319,7 +342,9 @@ export default function Home() {
             <div className="relative">
               <select
                 value={filters.typeEvenement}
-                onChange={(e) => handleFilterChange('typeEvenement', e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange("typeEvenement", e.target.value)
+                }
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A1F] focus:border-transparent appearance-none cursor-pointer hover:border-gray-300 transition-colors"
               >
                 {filterOptions.typeEvenement.map((option) => (
@@ -328,7 +353,10 @@ export default function Home() {
                   </option>
                 ))}
               </select>
-              <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+              <ChevronDown
+                size={16}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+              />
             </div>
           </div>
 
@@ -340,7 +368,7 @@ export default function Home() {
             <div className="relative">
               <select
                 value={filters.prix}
-                onChange={(e) => handleFilterChange('prix', e.target.value)}
+                onChange={(e) => handleFilterChange("prix", e.target.value)}
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A1F] focus:border-transparent appearance-none cursor-pointer hover:border-gray-300 transition-colors"
               >
                 {filterOptions.prix.map((option) => (
@@ -349,7 +377,10 @@ export default function Home() {
                   </option>
                 ))}
               </select>
-              <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+              <ChevronDown
+                size={16}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+              />
             </div>
           </div>
 
@@ -361,7 +392,7 @@ export default function Home() {
             <input
               type="date"
               value={filters.date}
-              onChange={(e) => handleFilterChange('date', e.target.value)}
+              onChange={(e) => handleFilterChange("date", e.target.value)}
               className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A1F] focus:border-transparent hover:border-gray-300 transition-colors"
             />
           </div>
@@ -374,7 +405,7 @@ export default function Home() {
             <div className="relative">
               <select
                 value={filters.heure}
-                onChange={(e) => handleFilterChange('heure', e.target.value)}
+                onChange={(e) => handleFilterChange("heure", e.target.value)}
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A1F] focus:border-transparent appearance-none cursor-pointer hover:border-gray-300 transition-colors"
               >
                 {filterOptions.heure.map((option) => (
@@ -383,7 +414,10 @@ export default function Home() {
                   </option>
                 ))}
               </select>
-              <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+              <ChevronDown
+                size={16}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+              />
             </div>
           </div>
 
@@ -395,7 +429,7 @@ export default function Home() {
             <div className="relative">
               <select
                 value={filters.lieu}
-                onChange={(e) => handleFilterChange('lieu', e.target.value)}
+                onChange={(e) => handleFilterChange("lieu", e.target.value)}
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A1F] focus:border-transparent appearance-none cursor-pointer hover:border-gray-300 transition-colors"
               >
                 {filterOptions.lieu.map((option) => (
@@ -404,7 +438,10 @@ export default function Home() {
                   </option>
                 ))}
               </select>
-              <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+              <ChevronDown
+                size={16}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+              />
             </div>
           </div>
         </div>
@@ -447,74 +484,123 @@ export default function Home() {
           ))}
         </div>
 
+        {/* Add this nav bar above the event list: */}
+        <div className="flex gap-8 font-semibold text-black dark:text-white justify-center text-lg md:text-xl my-8">
+          <button
+            onClick={() => setSelectedCategory("Tous")}
+            className={
+              selectedCategory === "Tous"
+                ? "text-[#FF5A1F] underline"
+                : "hover:underline"
+            }
+          >
+            Accueil
+          </button>
+          <button
+            onClick={() => setSelectedCategory("Événements")}
+            className={
+              selectedCategory === "Événements"
+                ? "text-[#FF5A1F] underline"
+                : "hover:underline"
+            }
+          >
+            Événements
+          </button>
+          <button
+            onClick={() => setSelectedCategory("Activités")}
+            className={
+              selectedCategory === "Activités"
+                ? "text-[#FF5A1F] underline"
+                : "hover:underline"
+            }
+          >
+            Activités
+          </button>
+          <button
+            onClick={() => setSelectedCategory("Restaurants")}
+            className={
+              selectedCategory === "Restaurants"
+                ? "text-[#FF5A1F] underline"
+                : "hover:underline"
+            }
+          >
+            Restaurants
+          </button>
+        </div>
+
         {/* Event Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {filteredEvents.map((event) => (
-            <div
-              key={event.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-            >
-              {/* Image with Navigation Arrows and Heart */}
-              <div className="relative h-48 group">
-                <Image
-                  src={event.image}
-                  alt={event.title}
-                  fill
-                  className="object-cover"
-                />
-                
-                {/* Navigation Arrows */}
-                <button className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                  <ChevronLeft size={16} />
-                </button>
-                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                  <ChevronRight size={16} />
-                </button>
-
-                {/* Heart Icon */}
-                <button
-                  onClick={() => toggleFavorite(event.id)}
-                  className="absolute top-2 right-2 p-1 rounded-full bg-white/80 hover:bg-white transition-colors"
-                >
-                  <Heart
-                    size={16}
-                    className={`${
-                      favorites.has(event.id)
-                        ? "fill-red-500 text-red-500"
-                        : "text-gray-600"
-                    }`}
+          {events
+            .filter(
+              (e) =>
+                selectedCategory === "Tous" || e.category === selectedCategory
+            )
+            .map((event) => (
+              <div
+                key={event.id}
+                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+              >
+                {/* Image with Navigation Arrows and Heart */}
+                <div className="relative h-48 group">
+                  <Image
+                    src={event.image}
+                    alt={event.title}
+                    fill
+                    className="object-cover"
                   />
-                </button>
-              </div>
 
-              {/* Card Content */}
-              <div className="p-4">
-                <h3 className="font-bold text-sm mb-2 line-clamp-2">
-                  {event.title}
-                </h3>
-                
-                <div className="text-xs text-gray-600 mb-3 space-y-1">
-                  <p>{event.location}</p>
-                  <p>{event.date}</p>
-                  {event.time && <p>{event.time}</p>}
+                  {/* Navigation Arrows */}
+                  <button className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ChevronRight size={16} />
+                  </button>
+
+                  {/* Heart Icon */}
+                  <button
+                    onClick={() => toggleFavorite(event.id)}
+                    className="absolute top-2 right-2 p-1 rounded-full bg-white/80 hover:bg-white transition-colors"
+                  >
+                    <Heart
+                      size={16}
+                      className={`${
+                        favorites.has(event.id)
+                          ? "fill-red-500 text-red-500"
+                          : "text-gray-600"
+                      }`}
+                    />
+                  </button>
                 </div>
 
-                {/* Price Badge */}
-                <div className="flex justify-center mb-3">
-                  <span className="bg-[#FF5A1F] text-white px-3 py-1 rounded-full text-sm font-bold">
-                    {event.price}
-                  </span>
-                </div>
+                {/* Card Content */}
+                <div className="p-4">
+                  <h3 className="font-bold text-sm mb-2 line-clamp-2">
+                    {event.title}
+                  </h3>
 
-               <Link
-                    href="/event/rema2025"
+                  <div className="text-xs text-gray-600 mb-3 space-y-1">
+                    <p>{event.location}</p>
+                    <p>{event.date}</p>
+                    {event.time && <p>{event.time}</p>}
+                  </div>
+
+                  {/* Price Badge */}
+                  <div className="flex justify-center mb-3">
+                    <span className="bg-[#FF5A1F] text-white px-3 py-1 rounded-full text-sm font-bold">
+                      {event.price}
+                    </span>
+                  </div>
+
+                  <Link
+                    href={`/event/${event.id}`}
                     className="w-full block bg-[#FF5A1F] text-white py-2 rounded text-sm font-bold hover:bg-red-600 transition-colors text-center"
                   >
                     Acheter maintenant
-                </Link>
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
 
         {/* Pagination Dots */}
@@ -574,12 +660,17 @@ export default function Home() {
 
                     {/* Location */}
                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                      <MapPin size={16} className="text-[#FF5A1F] flex-shrink-0" />
+                      <MapPin
+                        size={16}
+                        className="text-[#FF5A1F] flex-shrink-0"
+                      />
                       <span>{event.location}</span>
                     </div>
 
                     {/* Address */}
-                    <p className="text-sm text-gray-500 mb-3">{event.address}</p>
+                    <p className="text-sm text-gray-500 mb-3">
+                      {event.address}
+                    </p>
 
                     {/* Date and Time */}
                     <div className="text-sm text-gray-700 mb-2">
@@ -598,9 +689,7 @@ export default function Home() {
                         <span className="text-sm font-bold text-gray-900">
                           {event.rating.toFixed(1)}
                         </span>
-                        <div className="flex">
-                          {renderStars(event.rating)}
-                        </div>
+                        <div className="flex">{renderStars(event.rating)}</div>
                       </div>
                       <span className="text-sm text-gray-500">
                         ({event.reviewsCount} Reviews)
@@ -610,16 +699,20 @@ export default function Home() {
                     {/* Price and Action */}
                     <div className="flex items-center justify-between">
                       <div className="text-lg">
-                        <span className="font-bold text-gray-900">{event.price}</span>
-                        <span className="text-gray-500 text-sm ml-1">{event.pricePerPerson}</span>
+                        <span className="font-bold text-gray-900">
+                          {event.price}
+                        </span>
+                        <span className="text-gray-500 text-sm ml-1">
+                          {event.pricePerPerson}
+                        </span>
                       </div>
-                    <Link
-                        href="/event/rema2025"
+                      <Link
+                        href={`/event/${event.id}`}
                         className="bg-[#FF5A1F] hover:bg-red-600 text-white px-6 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 shadow-md hover:shadow-lg"
                       >
                         <Ticket size={16} />
                         Acheter
-                    </Link>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -632,24 +725,27 @@ export default function Home() {
             <div className="bg-white rounded-2xl shadow-xl p-6 h-full min-h-[600px] sticky top-4">
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-bold text-lg text-gray-900">Carte interactive</h3>
+                  <h3 className="font-bold text-lg text-gray-900">
+                    Carte interactive
+                  </h3>
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <MapPin size={16} className="text-[#FF5A1F]" />
                     <span>Casablanca, Maroc</span>
                   </div>
                 </div>
                 <p className="text-sm text-gray-600">
-                  Explorez les événements sur la carte et cliquez sur les marqueurs pour plus de détails
+                  Explorez les événements sur la carte et cliquez sur les
+                  marqueurs pour plus de détails
                 </p>
               </div>
-              
-              <InteractiveMap 
+
+              <InteractiveMap
                 events={nearbyEvents}
-                center={[33.5731, -7.5898]} 
+                center={[33.5731, -7.5898]}
                 zoom={12}
                 className="border border-gray-200 rounded-xl"
               />
-              
+
               {/* Map Legend */}
               <div className="mt-4 flex flex-wrap gap-2 justify-center">
                 <div className="flex items-center gap-2 text-xs text-gray-600 bg-gray-50 px-3 py-1 rounded-full">
@@ -664,10 +760,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-    
-      
-
     </main>
   );
 }

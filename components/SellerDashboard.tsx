@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { CalendarDays, Cog, Plus } from "lucide-react";
+import { Cog, Plus } from "lucide-react";
 import Link from "next/link";
 import Spinner from "./Spinner";
 import { Button } from "@/components/ui/button";
@@ -23,9 +23,11 @@ type AccountStatus = {
 export default function SellerDashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
-  const [accountStatus, setAccountStatus] = useState<AccountStatus | null>(null);
+  const [accountStatus, setAccountStatus] = useState<AccountStatus | null>(
+    null
+  );
   const [accountCreatePending, setAccountCreatePending] = useState(false);
-  const [error, setError] = useState(false);
+  const [error] = useState(false);
   const router = useRouter();
 
   const [reservations, setReservations] = useState([
@@ -34,7 +36,12 @@ export default function SellerDashboard() {
   ]);
 
   const [reviews] = useState([
-    { id: 1, clientName: "Emma", rating: 5, comment: "Une expérience incroyable!" },
+    {
+      id: 1,
+      clientName: "Emma",
+      rating: 5,
+      comment: "Une expérience incroyable!",
+    },
     { id: 2, clientName: "Liam", rating: 4, comment: "Tout était parfait!" },
   ]);
 
@@ -48,7 +55,7 @@ export default function SellerDashboard() {
   }, []);
 
   const fetchAccountStatus = () => {
-    // Simulation d’appel API Stripe
+    // Simulation d'appel API Stripe
     setAccountStatus({
       isActive: true,
       chargesEnabled: true,
@@ -59,13 +66,15 @@ export default function SellerDashboard() {
   };
 
   const handleConfirm = (id: number) => {
-    setReservations(reservations.map(res =>
-      res.id === id ? { ...res, status: "confirmed" } : res
-    ));
+    setReservations(
+      reservations.map((res) =>
+        res.id === id ? { ...res, status: "confirmed" } : res
+      )
+    );
   };
 
   const handleCancel = (id: number) => {
-    setReservations(reservations.filter(res => res.id !== id));
+    setReservations(reservations.filter((res) => res.id !== id));
   };
 
   const handleManageAccount = () => {
@@ -77,8 +86,12 @@ export default function SellerDashboard() {
   if (!user)
     return (
       <div className="p-6 text-center">
-        <p className="mb-4">Vous devez être connecté pour accéder au tableau de bord vendeur.</p>
-        <Link href="/sign-in" className="text-orange-600 underline">Se connecter</Link>
+        <p className="mb-4">
+          Vous devez être connecté pour accéder au tableau de bord vendeur.
+        </p>
+        <Link href="/sign-in" className="text-orange-600 underline">
+          Se connecter
+        </Link>
       </div>
     );
 
@@ -88,28 +101,69 @@ export default function SellerDashboard() {
       <aside className="w-1/4 bg-orange-600 text-white p-6">
         <h2 className="text-2xl font-bold mb-4">Cas@Event</h2>
         <ul className="space-y-3">
-          <li><a href="#" className="block">Tableau de bord</a></li>
-          <li><a href="#" className="block">Annonces</a></li>
-          <li><a href="#" className="block">Réservations</a></li>
-          <li><a href="#" className="block">Avis</a></li>
-          <li><a href="#" className="block">Statistiques</a></li>
+          <li>
+            <Link href="/seller" className="block">
+              Tableau de bord
+            </Link>
+          </li>
+          <li>
+            <Link href="/seller/annonces" className="block">
+              Annonces
+            </Link>
+          </li>
+          <li>
+            <Link href="/seller/reservations" className="block">
+              Réservations
+            </Link>
+          </li>
+          <li>
+            <a href="#" className="block">
+              Avis
+            </a>
+          </li>
+          <li>
+            <a href="#" className="block">
+              Statistiques
+            </a>
+          </li>
         </ul>
       </aside>
 
       {/* Contenu principal */}
       <main className="w-3/4 p-8 space-y-10">
-        <header>
-          <h1 className="text-3xl font-bold">Bienvenue sur votre tableau de bord vendeur</h1>
+        <header className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">
+            Bienvenue sur votre tableau de bord vendeur
+          </h1>
+          <Button
+            onClick={() => router.push("/seller/new-event")}
+            className="bg-orange-600 text-white hover:bg-orange-700 flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Créer un événement
+          </Button>
         </header>
+
+        {/* Example: Ticket redirection button for demonstration */}
+        <section>
+          <Button onClick={() => router.push("/tickets/123")}>
+            Voir un ticket exemple
+          </Button>
+        </section>
 
         {/* Paiements */}
         <section>
           <div className="bg-white p-6 rounded-lg shadow">
             {accountStatus ? (
               <>
-                <h2 className="text-xl font-semibold mb-4">Statut des paiements</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  Statut des paiements
+                </h2>
                 <p className="mb-2">
-                  Compte : <strong>{accountStatus.isActive ? "Actif" : "Inactif"}</strong>
+                  Compte :{" "}
+                  <strong>
+                    {accountStatus.isActive ? "Actif" : "Inactif"}
+                  </strong>
                 </p>
                 <p className="mb-2">
                   Accepte les paiements :{" "}
@@ -125,7 +179,9 @@ export default function SellerDashboard() {
               </>
             ) : (
               <>
-                <h2 className="text-xl font-semibold mb-4">Créer un compte vendeur</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  Créer un compte vendeur
+                </h2>
                 <Button
                   onClick={async () => {
                     setAccountCreatePending(true);
@@ -138,8 +194,14 @@ export default function SellerDashboard() {
                 </Button>
               </>
             )}
-            {accountCreatePending && <p className="text-gray-500 mt-4">Création en cours...</p>}
-            {error && <p className="text-red-500 mt-2">Erreur de création du compte Stripe</p>}
+            {accountCreatePending && (
+              <p className="text-gray-500 mt-4">Création en cours...</p>
+            )}
+            {error && (
+              <p className="text-red-500 mt-2">
+                Erreur de création du compte Stripe
+              </p>
+            )}
           </div>
         </section>
 
@@ -148,13 +210,26 @@ export default function SellerDashboard() {
           <h2 className="text-xl font-semibold mb-4">Réservations clients</h2>
           <div className="bg-white rounded-lg shadow p-4">
             {reservations.map((res) => (
-              <div key={res.id} className="flex justify-between items-center border-b py-2">
+              <div
+                key={res.id}
+                className="flex justify-between items-center border-b py-2"
+              >
                 <span>{res.clientName}</span>
                 <div>
                   {res.status === "pending" ? (
                     <>
-                      <Button onClick={() => handleConfirm(res.id)} className="mr-2">Confirmer</Button>
-                      <Button onClick={() => handleCancel(res.id)} variant="destructive">Annuler</Button>
+                      <Button
+                        onClick={() => handleConfirm(res.id)}
+                        className="mr-2"
+                      >
+                        Confirmer
+                      </Button>
+                      <Button
+                        onClick={() => handleCancel(res.id)}
+                        variant="destructive"
+                      >
+                        Annuler
+                      </Button>
                     </>
                   ) : (
                     <span className="text-green-600">Confirmé</span>
@@ -173,7 +248,9 @@ export default function SellerDashboard() {
               <div key={review.id} className="border-b py-2">
                 <div className="flex justify-between">
                   <span>{review.clientName}</span>
-                  <span className="text-yellow-500">{'★'.repeat(review.rating)}</span>
+                  <span className="text-yellow-500">
+                    {"★".repeat(review.rating)}
+                  </span>
                 </div>
                 <p>{review.comment}</p>
                 <Button className="mt-2">Répondre</Button>
@@ -187,8 +264,14 @@ export default function SellerDashboard() {
           <h2 className="text-xl font-semibold mb-4">Statistiques</h2>
           <div className="bg-white rounded-lg shadow p-4 space-y-2">
             <p>Total réservations : {reservations.length}</p>
-            <p>Confirmées : {reservations.filter(r => r.status === "confirmed").length}</p>
-            <p>En attente : {reservations.filter(r => r.status === "pending").length}</p>
+            <p>
+              Confirmées :{" "}
+              {reservations.filter((r) => r.status === "confirmed").length}
+            </p>
+            <p>
+              En attente :{" "}
+              {reservations.filter((r) => r.status === "pending").length}
+            </p>
           </div>
         </section>
       </main>

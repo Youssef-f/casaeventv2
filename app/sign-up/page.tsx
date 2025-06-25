@@ -71,7 +71,7 @@ const Page = () => {
       });
 
       console.log("Utilisateur inscrit :", userCredential.user);
-      router.push("/dashboard"); // Redirection après inscription
+      router.push("/"); // Redirection après inscription
     } catch (err: any) {
       if (err.code === "auth/email-already-in-use") {
         setError("Cet email est déjà utilisé.");
@@ -90,7 +90,10 @@ const Page = () => {
           <div className="w-full max-w-md flex flex-col items-center justify-center gap-4 m-2">
             <h2 className="font-bold text-2xl mt-2">Cas@Event | Inscription</h2>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-8 w-full"
+              >
                 <FormField
                   control={form.control}
                   name="name"
@@ -209,7 +212,8 @@ const Page = () => {
           <div className="max-w-md text-center">
             <h3 className="font-bold text-2xl mb-4">Visiteurs & Touristes</h3>
             <p className="text-slate-400 mb-8 text-center">
-              Cas@Event est la solution pour découvrir et réserver des activités locales sur Casablanca.
+              Cas@Event est la solution pour découvrir et réserver des activités
+              locales sur Casablanca.
             </p>
             <div>
               <Image

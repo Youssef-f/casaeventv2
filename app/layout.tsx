@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
-import Header from "@/components/Header";
+import HeaderWrapper from "@/components/HeaderWrapper";
 
 const ibmPlexSans = localFont({
   src: [
@@ -13,7 +13,9 @@ const ibmPlexSans = localFont({
 });
 
 const bebasNeue = localFont({
-  src: [{ path: "/fonts/BebasNeue-Regular.ttf", weight: "400", style: "normal" }],
+  src: [
+    { path: "/fonts/BebasNeue-Regular.ttf", weight: "400", style: "normal" },
+  ],
   variable: "--bebas-neue",
 });
 
@@ -29,8 +31,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`${ibmPlexSans.className} ${bebasNeue.variable} antialiased`}>
-        <Header />
+      <body
+        className={`${ibmPlexSans.className} ${bebasNeue.variable} antialiased`}
+      >
+        <HeaderWrapper />
         {children}
       </body>
     </html>

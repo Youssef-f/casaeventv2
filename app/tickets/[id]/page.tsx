@@ -50,9 +50,31 @@ export default function TicketPage() {
     return () => unsub();
   }, [params.id, router]);
 
-  if (loading) return <p className="text-center mt-20 text-orange-600 font-semibold">Chargement du ticket...</p>;
+  if (loading)
+    return (
+      <p className="text-center mt-20 text-orange-600 font-semibold">
+        Chargement du ticket...
+      </p>
+    );
 
-  if (!ticket || !ticket.event) return null;
+  if (!ticket || !ticket.event) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="bg-white p-8 rounded shadow text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">
+            Aucun ticket trouvé
+          </h2>
+          <p className="text-gray-600 mb-4">
+            Aucun ticket n'a été trouvé pour cet identifiant ou vous n'y avez
+            pas accès.
+          </p>
+          <Link href="/tickets" className="text-orange-600 underline">
+            Retour à mes tickets
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -60,7 +82,10 @@ export default function TicketPage() {
         <div className="mb-8 space-y-8">
           {/* Navigation and Actions */}
           <div className="flex items-center justify-between">
-            <Link href="/tickets" className="flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+            <Link
+              href="/tickets"
+              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Retour à mes tickets
             </Link>
@@ -78,16 +103,23 @@ export default function TicketPage() {
 
           {/* Event Info Summary */}
           <div
-            className={`bg-white p-6 rounded-lg shadow-sm border ${ticket.event.is_cancelled ? "border-red-200" : "border-gray-100"}`}
+            className={`bg-white p-6 rounded-lg shadow-sm border ${
+              ticket.event.is_cancelled ? "border-red-200" : "border-gray-100"
+            }`}
           >
-            <h1 className="text-2xl font-bold text-gray-900">{ticket.event.name}</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {ticket.event.name}
+            </h1>
             <p className="mt-1 text-gray-600">
-              {new Date(ticket.event.eventDate).toLocaleDateString()} à {ticket.event.location}
+              {new Date(ticket.event.eventDate).toLocaleDateString()} à{" "}
+              {ticket.event.location}
             </p>
             <div className="mt-4 flex items-center gap-4">
               <span
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  ticket.event.is_cancelled ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"
+                  ticket.event.is_cancelled
+                    ? "bg-red-50 text-red-700"
+                    : "bg-green-50 text-green-700"
                 }`}
               >
                 {ticket.event.is_cancelled ? "Annulé" : "Ticket valide"}
@@ -98,7 +130,8 @@ export default function TicketPage() {
             </div>
             {ticket.event.is_cancelled && (
               <p className="mt-4 text-sm text-red-600">
-                Cet événement a été annulé. Un remboursement sera effectué si ce n’est pas déjà fait.
+                Cet événement a été annulé. Un remboursement sera effectué si ce
+                n'est pas déjà fait.
               </p>
             )}
           </div>
@@ -111,13 +144,23 @@ export default function TicketPage() {
         {/* Additional Information */}
         <div
           className={`mt-8 rounded-lg p-4 ${
-            ticket.event.is_cancelled ? "bg-red-50 border-red-100 border" : "bg-blue-50 border-blue-100 border"
+            ticket.event.is_cancelled
+              ? "bg-red-50 border-red-100 border"
+              : "bg-blue-50 border-blue-100 border"
           }`}
         >
-          <h3 className={`text-sm font-medium ${ticket.event.is_cancelled ? "text-red-900" : "text-blue-900"}`}>
-            Besoin d’aide ?
+          <h3
+            className={`text-sm font-medium ${
+              ticket.event.is_cancelled ? "text-red-900" : "text-blue-900"
+            }`}
+          >
+            Besoin d'aide ?
           </h3>
-          <p className={`mt-1 text-sm ${ticket.event.is_cancelled ? "text-red-700" : "text-blue-700"}`}>
+          <p
+            className={`mt-1 text-sm ${
+              ticket.event.is_cancelled ? "text-red-700" : "text-blue-700"
+            }`}
+          >
             {ticket.event.is_cancelled
               ? "Pour toute question concernant les remboursements ou annulations, contactez notre support à team@papareact-tickr.com"
               : "Pour tout problème avec votre ticket, contactez notre support à team@papareact-tickr.com"}
